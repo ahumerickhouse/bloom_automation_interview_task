@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+def drivers = ['firefox', 'ie', 'chrome']
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    drivers.each { driver ->
+        testCompile "org.seleniumhq.selenium:selenium-${driver}-driver:${seleniumVersion}"
+    }
+    testCompile "org.seleniumhq.selenium:selenium-support:${seleniumVersion}"
+
+}
+
+drivers.each { driver ->
+    task "${driver}Test"(type: Test) {
+        systemProperties = System.properties
+        systemProperties['selenium.browser'] = driver
+    }
+}
